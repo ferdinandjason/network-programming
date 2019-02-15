@@ -1,67 +1,103 @@
 import socket
+import threading
 import sys
 
-#define server address, create socket, bind, and listen
-server_address = ('localhost', 5000)
-server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_socket.bind(server_address)
-server_socket.listen(5)
+MAX_BUFFER = 1024
 
-client_list = []
-client_socket_list = []
 
-total_res = 0
+class ServerThread(threading.Thread):
+    def __init__(self, (client, client_address), server, reply_port):
+        threading.Thread.__init__(self)
 
-string_list = []
+        self.client = client
+        self.client_address = client_address
+        self.server = server
 
-try:
-    while True:
-        client_socket, client_address = server_socket.accept()
-        if client_address not in client_list :
-            client_list.append(client_address)
-            client_socket_list.append(client_socket)
+    def parse_data(self, data):
+        math = data.split(' ')
+        math[0] = int(math[0])
+        math[2] = int(math[2])
 
-        # receive data from client and print
-        data = client_socket.recv(1024)
-        print data
-        if data == 'END' :
-            for client_address, client_socket in zip(client_list, client_socket_list) :
-                try:
-                    client_socket.send('TOTAL AKHIR : ' + str(total_res) + ' END')
-                except:
-                    pass
-        else : 
-            operasi = data.split(' ')
-            result = 0
-            if operasi[1] == '+' :
-                result = int(operasi[0]) + int(operasi[2])
-            elif operasi[1] == '-' :
-                result = int(operasi[0]) - int(operasi[2])
-            elif operasi[1] == '*' :
-                result = int(operasi[0]) * int(operasi[2])
-            elif operasi[1] == '/' :
-                result = int(operasi[0]) / int(operasi[2])
-            string_balasan = ', ' + data + ', ' + str(result)
-            total_res += result
+        result = math[0]
 
-            for client_address in client_list :
-                string_list.append(client_address[0] + ', ' + str(client_address[1]) + string_balasan)
+        if math[1] == '+':
+            result += math[2]
+        elif math[1] == '-':
+            result -= math[2]
+        elif math[1] == '*':
+            result *= math[2]
+        elif math[1] == '/':
+            result /= math[2]
 
-            print(string_list)
 
-            for client_socket in client_socket_list :
-                print client_socket
-                # try:
-                client_socket.send('\n'.join(string_list[-2:]))
-                # except:
-                #     pass
-            
-            print client_list
-        
+        return result
 
-        # close socket client
-        # client_socket.close()
+    def run(self):
+		print 'client connected: ' + str(self.client_address) + '\n'
+		try:
+			while True:
+				data = self.client.recv(MAX_BUFFER)
+				print data
+				if data == 'END':
+					self.server.broadcast(
+					    'TOTAL AKHIR : ' + str(self.server.total_result) + ' END')
+					self.client.close()
+				else:
+					result = self.parse_data(data)
 
-except KeyboardInterrupt:
-    server_socket.close()
-    sys.exit(0)
+					self.server.total_result += result
+					reply_message = data + ',' + str(result)
+					self.server.broadcast(reply_message)
+		except Exception:
+			pass
+
+
+class Server:
+    def __init__(self, port, reply_port):
+        self.address = 'localhost'
+
+        self.port = port
+        self.reply_port = reply_port
+
+        self.total_result = 0
+        self.clients = []
+
+    def start_server_socket(self):
+        server_address = (self.address, self.port)
+
+        self.server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server_sock.bind(server_address)
+        self.server_sock.listen(5)
+
+    def start_reply_socket(self):
+        reply_address = (self.address, self.reply_port)
+
+        self.reply_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.reply_sock.connect(reply_address)
+
+    def start(self):
+        self.start_server_socket()
+        try:
+            while True:
+                thread = ServerThread(self.server_sock.accept(), self, self.reply_port)
+                thread.daemon = True
+                thread.start()
+
+                self.clients.append(thread)
+
+        except KeyboardInterrupt:
+            print 'Closing socket connection'
+            self.server_sock.close()
+            sys.exit(0)
+
+    def broadcast(self, message):
+        self.start_reply_socket()
+        for client in self.clients:
+            header = str(client.client_address[0]) + \
+                ',' + str(client.client_address[1]) + ','
+            self.reply_sock.send(header+message)
+	self.reply_sock.close()
+
+
+server = Server(5000, 5001)
+server.start()
