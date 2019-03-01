@@ -11,7 +11,7 @@
 2. Menjelaskan dan memperbaiki `challenge-server-2.py` serta membuat `challenge-client-2.py`.
 3. Modifikasi `challenge-server-1.py` agar bisa menerima input beberapa dari operasi matematika dari client, 
 `1 + 5,4 * 6,8 / 2` (1 string mendapatkan 1 thread), kemudian menampilkan hasilnya dalam urutan terbalik
-`4,24,6`.
+`4,24,6`.Secret
 
 ## Dokumentasi
 3. Soal 3

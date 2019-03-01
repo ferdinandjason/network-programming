@@ -2,9 +2,9 @@
 
 ## Outline
 - [Challenge Minggu 2](#challenge-minggu-2)
-  - [Outline](#outline)
-  - [Deskripsi Challenge](#deskripsi-challenge)
-  - [Dokumentasi](#dokumentasi)
+    - [Outline](#outline)
+    - [Deskripsi Challenge](#deskripsi-challenge)
+    - [Dokumentasi](#dokumentasi)
 
 ## Deskripsi Challenge
 1. Modifikasi code `select` agar bisa mencatat semua pesan yang diterima di server kedalam sebuah file. Catat IP,Port,Timestamp, Pesan yang dikirimkan dari Client
