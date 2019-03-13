@@ -15,20 +15,7 @@ def download_files(path, destination):
     os.chdir(destination)
     print(destination + path + '/')
     os.mkdir(destination + path + '/')
-    # except:
-    #     pass
-    # try:
-        
-    # except OSError as ex:
-    #     if os.path.isdir(path):
-    #         pass
-    #     else:
-    #         raise
     print "Created: " + destination+ path
-    # except OSError:
-    #     pass
-    # except error_perm:
-    #     pass
 
     filelist = ftp.nlst()
     print(filelist)
@@ -48,11 +35,6 @@ def download_files(path, destination):
                 print "Downloaded: " + filee
             except :
                 pass
-
-        #     # try:
-                
-            # except:
-            #     print "Error: File could not be downloaded " + filee
 
 while True:
     sys.stdout.write(">> ")
