@@ -61,7 +61,7 @@ while True:
     if cmds == "MKD":
         ftp.mkd(args)
     if cmds == "DOWNPRESS":
-        ftp.cwd(args)
+        ftp.cwd(args) 
         download_files(args, os.getcwd()+'/')
         os.system("zip -r /home/ferdinand/Code/network-programming/week-5/TEST.zip " + os.getcwd())
         os.system("rm -rf /home/ferdinand/Code/network-programming/week-5/"+args)

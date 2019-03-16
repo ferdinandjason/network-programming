@@ -6,6 +6,7 @@ Dokumentasi Mata Kuliah Pemrograman Jaringan
 - [Pemrograman Jaringan](#pemrograman-jaringan)
   - [Outline](#outline)
   - [Materials](#materials)
+    - [Week 0](#week-0)
     - [Week 1](#week-1)
       - [Terminologi](#terminologi)
       - [Client Server](#client-server)
@@ -16,6 +17,8 @@ Dokumentasi Mata Kuliah Pemrograman Jaringan
   - [Challenge](#challenge)
 
 ## Materials
+### Week 0
+Kontrak Kuliah
 ### Week 1
 #### Terminologi
 - Host : perangkat
@@ -81,4 +84,6 @@ Dokumentasi Mata Kuliah Pemrograman Jaringan
 - [Week 1](week-1)
 - [Week 2](week-2)
 - [Week 3](week-3)
+- [Week 4](week-4)
+- [Week 5](week-5)
 
